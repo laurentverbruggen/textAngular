@@ -85,87 +85,6 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 		}
 	}
 
-	/*
-		Custom stylesheet for the placeholders rules.
-		Credit to: http://davidwalsh.name/add-rules-stylesheets
-	*/
-	var sheet, addCSSRule, removeCSSRule, _addCSSRule, _removeCSSRule;
-	/* istanbul ignore else: IE <8 test*/
-	if(ie > 8 || ie === undefined){
-		var topsheet = (function() {
-			// Create the <style> tag
-			var style = document.createElement("style");
-			/* istanbul ignore else : WebKit hack :( */
-			if(/AppleWebKit\/([\d.]+)/.exec(navigator.userAgent)) style.appendChild(document.createTextNode(""));
-
-			// Add the <style> element to the page, add as first so the styles can be overridden by custom stylesheets
-			document.head.insertBefore(style,document.head.firstChild);
-
-			return style.sheet;
-		})();
-
-		// this sheet is used for the placeholders later on.
-		sheet = (function() {
-			// Create the <style> tag
-			var style = document.createElement("style");
-			/* istanbul ignore else : WebKit hack :( */
-			if(/AppleWebKit\/([\d.]+)/.exec(navigator.userAgent)) style.appendChild(document.createTextNode(""));
-
-			// Add the <style> element to the page, add as first so the styles can be overridden by custom stylesheets
-			document.head.appendChild(style);
-
-			return style.sheet;
-		})();
-
-		// use as: addCSSRule("header", "float: left");
-		addCSSRule = function(selector, rules) {
-			_addCSSRule(sheet, selector, rules);
-		};
-		_addCSSRule = function(sheet, selector, rules){
-			var insertIndex;
-			/* istanbul ignore else: firefox catch */
-			if(sheet.rules) insertIndex = Math.max(sheet.rules.length - 1, 0);
-			else if(sheet.cssRules) insertIndex = Math.max(sheet.cssRules.length - 1, 0);
-			/* istanbul ignore else: untestable IE option */
-			if(sheet.insertRule) {
-				sheet.insertRule(selector + "{" + rules + "}", insertIndex);
-			}
-			else {
-				sheet.addRule(selector, rules, insertIndex);
-			}
-			// return the index of the stylesheet rule
-			return insertIndex;
-		};
-
-		removeCSSRule = function(index){
-			_removeCSSRule(sheet, index);
-		};
-		_removeCSSRule = function(sheet, index){
-			/* istanbul ignore else: untestable IE option */
-			if(sheet.removeRule){
-				sheet.removeRule(index);
-			}else{
-				sheet.deleteRule(index);
-			}
-		};
-
-		// add generic styling for the editor
-		_addCSSRule(topsheet, '.ta-scroll-window.form-control', "height: auto; min-height: 300px; overflow: auto; font-family: inherit; font-size: 100%; position: relative; padding: 0;");
-		_addCSSRule(topsheet, '.ta-root.focussed .ta-scroll-window.form-control', 'border-color: #66afe9; outline: 0; -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);');
-		_addCSSRule(topsheet, '.ta-editor.ta-html', "min-height: 300px; height: auto; overflow: auto; font-family: inherit; font-size: 100%;");
-		_addCSSRule(topsheet, '.ta-scroll-window > .ta-bind', "height: auto; min-height: 300px; padding: 6px 12px;");
-
-		// add the styling for the awesomness of the resizer
-		_addCSSRule(topsheet, '.ta-root .ta-resizer-handle-overlay', 'z-index: 100; position: absolute; display: none;');
-		_addCSSRule(topsheet, '.ta-root .ta-resizer-handle-overlay > .ta-resizer-handle-info', 'position: absolute; bottom: 16px; right: 16px; border: 1px solid black; background-color: #FFF; padding: 0 4px; opacity: 0.7;');
-		_addCSSRule(topsheet, '.ta-root .ta-resizer-handle-overlay > .ta-resizer-handle-background', 'position: absolute; bottom: 5px; right: 5px; left: 5px; top: 5px; border: 1px solid black; background-color: rgba(0, 0, 0, 0.2);');
-		_addCSSRule(topsheet, '.ta-root .ta-resizer-handle-overlay > .ta-resizer-handle-corner', 'width: 10px; height: 10px; position: absolute;');
-		_addCSSRule(topsheet, '.ta-root .ta-resizer-handle-overlay > .ta-resizer-handle-corner-tl', 'top: 0; left: 0; border-left: 1px solid black; border-top: 1px solid black;');
-		_addCSSRule(topsheet, '.ta-root .ta-resizer-handle-overlay > .ta-resizer-handle-corner-tr', 'top: 0; right: 0; border-right: 1px solid black; border-top: 1px solid black;');
-		_addCSSRule(topsheet, '.ta-root .ta-resizer-handle-overlay > .ta-resizer-handle-corner-bl', 'bottom: 0; left: 0; border-left: 1px solid black; border-bottom: 1px solid black;');
-		_addCSSRule(topsheet, '.ta-root .ta-resizer-handle-overlay > .ta-resizer-handle-corner-br', 'bottom: 0; right: 0; border: 1px solid black; cursor: se-resize; background-color: white;');
-	}
-
 	// recursive function that returns an array of angular.elements that have the passed attribute set on them
 	function getByAttribute(element, attribute){
 		var resultingElements = [];
@@ -1096,13 +1015,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 
 						// Placeholders not supported on ie 8 and below
 						if(attrs.placeholder && (ie > 8 || ie === undefined)){
-							var ruleIndex;
-							if(attrs.id) ruleIndex = addCSSRule('#' + attrs.id + '.placeholder-text:before', 'content: "' + attrs.placeholder + '"');
-							else throw('textAngular Error: An unique ID is required for placeholders to work');
-
-							scope.$on('$destroy', function(){
-								removeCSSRule(ruleIndex);
-							});
+                            /* REMOVED DUE TO NON-CSP COMPLIANT */
 						}
 
 						element.on('focus', function(){

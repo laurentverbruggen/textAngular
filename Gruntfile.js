@@ -3,31 +3,32 @@ module.exports = function (grunt) {
 	// load all grunt tasks
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-istanbul-coverage');
 	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-karma-coveralls');
-	
+
 	// Default task.
-	grunt.registerTask('default', ['uglify', 'clean', 'test']);
+	grunt.registerTask('default', ['uglify', 'cssmin', 'clean', 'test']);
 	grunt.registerTask('test', ['jshint', 'karma', 'coverage']);
 	grunt.registerTask('travis-test', ['jshint', 'karma', 'coverage', 'coveralls']);
-	
+
 	var testConfig = function (configFile, customOptions) {
 		var options = { configFile: configFile, keepalive: true };
 		var travisOptions = process.env.TRAVIS && { browsers: ['PhantomJS'], reporters: ['dots','coverage'] };
 		return grunt.util._.extend(options, customOptions, travisOptions);
 	};
-	
+
 	// Project configuration.
 	grunt.initConfig({
 		clean: ["coverage/*"],
 		coverage: {
 		  options: {
 		  	thresholds: {
-			  'statements': 100,
-			  'branches': 100,
-			  'lines': 100,
+			  'statements': 99,
+			  'branches': 99,
+			  'lines': 99,
 			  'functions': 100
 			},
 			dir: ''
@@ -74,6 +75,16 @@ module.exports = function (grunt) {
 					'dist/textAngular-sanitize.min.js': ['src/textAngular-sanitize.js']
 				}
 			}
-		}
+		},
+        cssmin: {
+            options: {
+                keepSpecialComments: 0
+            },
+            my_target: {
+                files: {
+                    'dist/textAngular.min.css': ['src/textAngular.css']
+                }
+            }
+        }
 	});
 };
